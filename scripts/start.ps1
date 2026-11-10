@@ -2,10 +2,8 @@
 # Usage (VPN on):  .\scripts\start.ps1      Override runtime:  $env:PASS_CONTAINER_RUNTIME = 'docker'
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location $root
-$envFile = ".env"
-if (-not (Test-Path $envFile)) { $envFile = Join-Path (Split-Path $root -Parent) "pauls-asnast-agent\.env" }
-if (-not (Test-Path $envFile)) { throw ".env missing - create it with your tokens (see README.md)." }
-Get-Content $envFile | Where-Object { $_ -match '^\s*(export\s+)?[A-Za-z_][A-Za-z0-9_]*=' } | ForEach-Object {
+if (-not (Test-Path .env)) { throw ".env missing - create it with your tokens (see README.md)." }
+Get-Content .env | Where-Object { $_ -match '^\s*(export\s+)?[A-Za-z_][A-Za-z0-9_]*=' } | ForEach-Object {
   $line = $_ -replace '^\s*export\s+', ''
   $name, $value = $line -split '=', 2
   Set-Item -Path "Env:$($name.Trim())" -Value $value.Trim().Trim('"').Trim("'")
